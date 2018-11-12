@@ -1,0 +1,27 @@
+version: '2'
+services:
+    datlas-api:
+        build: .
+        container_name: "datlas-api"
+        image: datlas-api
+        ports:
+            - 8080:8080
+        links:
+            - mongodb
+        depends_on:
+            - mongodb
+    mongodb:
+       image: mongo:latest
+       container_name: "mongodb"
+       environment:
+         - MONGO_DATA_DIR=/data/db
+         - MONGO_LOG_DIR=/dev/null
+         - MONGO_INITDB_ROOT_USERNAME=datlas
+         - MONGO_INITDB_ROOT_PASSWORD=SOMEPASS
+         - MONGO_INITDB_DATABASE=datlas
+       volumes:
+         - ./data/db:/data/db
+         - ./mongo_setup.js:/docker-entrypoint-initdb.d/mongo_setup.js
+       ports:
+           - 27017:27017
+       command: mongod --smallfiles # --logpath=/dev/null # --quiet
