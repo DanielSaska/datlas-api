@@ -1,0 +1,23 @@
+{
+  "name": "datlas-api",
+  "version": "0.0.1",
+  "description": "Data Atlas RESTful API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielSaska/datlas-api.git"
+  },
+  "author": "Daniel Saska",
+  "license": "",
+  "homepage": "https://github.com/DanielSaska/datlas-api",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "mongoose": "^5.2.6"
+  }
+}
