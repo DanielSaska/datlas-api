@@ -4,7 +4,7 @@ const mdb = require('./mongo').mdb;
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ExperimentDetials = new Schema({
+const Group = new Schema({
 	name: {type: [String], required: true, index: { unique: true } },
 	recordings: {type: [Schema.ObjectId], required: false},
 
@@ -12,6 +12,7 @@ const ExperimentDetials = new Schema({
 		addons: { type: [{
 			title: { type: String, required: true },
 			subtitle: { type: String, required: true },
+			description: { type: String, required: true },
 			data: { type: Object, required: false },
 			plot: { type: Object, required: false },
 			priority: { type: Number, required: true },
@@ -21,5 +22,5 @@ const ExperimentDetials = new Schema({
 
 });
 
-var ExperimentDetailsModel = mdb.model('experiment_details', ExperimentDetials);
-module.exports = ExperimentDetailsModel
+var GroupModel = mdb.model('groups', Group);
+module.exports = GroupModel

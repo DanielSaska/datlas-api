@@ -20,7 +20,7 @@ const mongo_options = {
 };
 
 mdb.connection.on('connected', function(){
-	console.log('Connected to EZO MongoDB');
+	console.log('Connected to Data Atlas MongoDB');
 	ready = true;
 });
 const mdb_start = function() {
@@ -50,56 +50,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const Recording = require("./schema/recording")
-app.get('/api/v1/recordings/:start', function(req, res, next) {
-	let perPage = 20;
-	let start = parseInt(req.params.start,0);
+app.use('/api/v1', require("./routes"));
 
-	Recording
-		.find({})
-		.skip(start)
-		.limit(perPage)
-		.exec(function(err, recordings) {
-			Recording.countDocuments().exec(function(err, count) {
-				if (err) return next(err);
-				let next = null;
-				if (count > start+perPage) {
-					next = start+perPage;
-				}
-				res.json({
-					recordings: recordings,
-					start: start,
-					next: next,
-					max_pg: Math.floor(count/perPage),
-					pg_size: perPage,
-					max: count
-				})
-			})
-		})
-});
-
-app.get('/api/v1/recording/:id/recording/details', function(req, res, next) {
-	let id = mongoose.Types.ObjectId(req.params.id);
-	console.log(id);
-
-	Recording
-		.findOne({_id: id})
-		.exec(function(err, bd) {
-			if (err) {
-				console.log(err);
-				return next(err);
-			}
-			//console.log(bd);
-			if (bd) {
-				res.json(bd);
-			} else {
-				res.status(404).json({});
-			}
-		})
-});
-
-
-
+/*
 const Plugin = require("./schema/plugin");
 const Analysis = require("./schema/analysis");
 
@@ -394,6 +347,7 @@ app.get('/api/v1/group/:id/details', function(req, res, next) {
 		})
 });
 
+*/
 
 
 

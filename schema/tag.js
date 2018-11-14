@@ -4,7 +4,7 @@ const mdb = require('./mongo').mdb;
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const TagDetials = new Schema({
+const Tag = new Schema({
 	name: {type: [String], required: true, index: { unique: true } },
 	recordings: {type: [Schema.ObjectId], required: false},
 
@@ -12,7 +12,6 @@ const TagDetials = new Schema({
 		addons: { type: [{
 			title: { type: String, required: true },
 			subtitle: { type: String, required: true },
-			description: { type: String, required: true },
 			data: { type: Object, required: false },
 			plot: { type: Object, required: false },
 			priority: { type: Number, required: true },
@@ -22,5 +21,5 @@ const TagDetials = new Schema({
 
 });
 
-var TagDetailsModel = mdb.model('group_details', TagDetials);
-module.exports = TagDetailsModel
+const TagModel = mdb.model('tags', Tag);
+module.exports = TagModel
