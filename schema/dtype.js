@@ -6,12 +6,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const DataType = new Schema({
-	exp_id: { type: Schema.ObjectId, required: true, index: true },
+	rec_id: { type: Schema.ObjectId, required: true, index: true },
+	name: { type: String, required: true },
+	short_name: { type: String, required: false },
 	data_type: { type: String, required: true, index: true },
 
 	summary: { type: Object, required: false },
 
-	visualizations: { type: Schema.ObjectId, required: false },
+	visualizations: { type: [Schema.ObjectId], required: false },
 
 	//Errors
 	err: {type: [String], required: false },

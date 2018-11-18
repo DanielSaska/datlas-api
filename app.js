@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const cfg = require("./config.json");
 const mdb = require('./schema/mongo').mdb;
+const version = require('./package.json').version;
 
 
 /////////////////////////////////////////////////////////////
@@ -26,7 +27,6 @@ mdb.connection.on('connected', function(){
 const mdb_start = function() {
 	return mdb.connect(cfg.mongo, mongo_options).catch(function(err) {
 		if (err) {
-			//TODO: contact Oracle
 			console.log('Failed to connect to MongoDB');
 			console.log(err);
 			setTimeout(mdb_start, 1000);
@@ -39,7 +39,7 @@ mdb_start();
 // Express
 const app = express()
 app.use(helmet())
-app.use(function (req, res, next) {
+app.use(function (req, res, next) { //TODO: may want to revisit this/load from conifg
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
@@ -51,304 +51,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/api/v1', require("./routes"));
-
-/*
-const Plugin = require("./schema/plugin");
-const Analysis = require("./schema/analysis");
-
-//Analysis
-app.get('/api/v1/recording/:id/analysis/addons', function(req, res, next) {
-	let id = mongoose.Types.ObjectId(req.params.id);
-	console.log(id)
-
-	Analysis
-		.findOne({_id: id}, {addons: true})
-		.exec(function(err, bd) {
-			console.log(err);
-			if (err) {
-				//console.error(err);
-				return next(err);
-			}
-			console.log(bd);
-			if (bd) {
-				res.json(bd);
-			} else {
-				res.status(404).json({});
-			}
-		})
-});
-
-
-//Returns the whole plugin entry
-app.get('/api/v1/recording/:id/:dtype', function(req, res, next) {
-	let id = mongoose.Types.ObjectId(req.params.id);
-	let dtype = req.params.dtype;
-
-	Plugin
-		.findOne({exp_id: id, data_type: dtype})
-		.exec(function(err, bd) {
-			if (err) return next(err);
-			//console.log(bd);
-			if (bd) {
-				res.json(bd);
-			} else {
-				res.status(404).json({});
-			}
-		})
-});
-
-//Returns the plugin summary only
-app.get('/api/v1/recording/:id/:dtype/summary', function(req, res, next) {
-	let id = mongoose.Types.ObjectId(req.params.id);
-	let dtype = req.params.dtype;
-
-	Plugin
-		.findOne({exp_id: id, data_type: dtype}, {summary: true})
-		.exec(function(err, bd) {
-			if (err) {
-				//console.error(err);
-				return next(err);
-			}
-			if (bd) {
-				res.json(bd);
-			} else {
-				res.status(404).json({});
-			}
-		})
-});
-
-
-
-//Returns the plugin addons only
-app.get('/api/v1/recording/:id/:dtype/addons', function(req, res, next) {
-	let id = mongoose.Types.ObjectId(req.params.id);
-	let dtype = req.params.dtype;
-
-	Plugin
-		.findOne({exp_id: id, data_type: dtype}, {addons: true})
-		.exec(function(err, bd) {
-			if (err) {
-				//console.error(err);
-				return next(err);
-			}
-			if (bd) {
-				res.json(bd);
-			} else {
-				res.status(404).json({});
-			}
-		})
-});
-
-
-const ExperimentDetails = require("./schema/experiment_details")
-app.get('/api/v1/experiments/:start', function(req, res, next) {
-	let perPage = 20;
-	let start = parseInt(req.params.start,0);
-
-	ExperimentDetails
-		.aggregate([{$project: {_id: 1, name: 1, count: {"$size": "$recordings"}}}])
-		.skip(start)
-		.limit(perPage)
-		.exec(function(err, experiments) {
-			ExperimentDetails.countDocuments().exec(function(err, count) {
-				if (err) return next(err);
-				let next = null;
-				if (count > start+perPage) {
-					next = start+perPage;
-				}
-				res.json({
-					experiments: experiments,
-					start: start,
-					next: next,
-					max_pg: Math.floor(count/perPage),
-					pg_size: perPage,
-					max: count
-				})
-			})
-		})
-});
-
-app.get('/api/v1/experiment/:id/details', function(req, res, next) {
-	let id = mongoose.Types.ObjectId(req.params.id);
-	console.log(id);
-
-	ExperimentDetails
-		.aggregate([
-			{ "$match": {'_id':id}},
-			{ "$unwind": "$recordings" },
-			{
-				"$lookup":
-				{
-					from: "recordings",
-					localField: "recordings",
-					foreignField: "_id",
-					as: "recordings"
-				}
-			},
-			{ "$unwind": "$recordings" },
-			{ "$project": { "_id": 1, "name": 1, "recordings": {"_id": 1, "datetime": 1, "duration": 1, "tags": 1, "human_id": 1}, "analysis": 1 }},
-			{ "$group": {
-				"_id": "$_id",
-				"name": { "$first": "$name"},
-				"analysis": { "$first": "$analysis"},
-				"recordings": { "$push": "$recordings" },
-			}}
-		])
-		.exec(function(err, bd) {
-			if (err) {
-				console.log(err);
-				return next(err);
-			}
-			//console.log(bd);
-			if (bd.length > 0) {
-				res.json(bd[0]);
-			} else {
-				res.status(404).json({});
-			}
-		})
-});
-
-
-const TagDetails = require("./schema/tag_details")
-app.get('/api/v1/tags/:start', function(req, res, next) {
-	let perPage = 20;
-	let start = parseInt(req.params.start,0);
-
-	TagDetails
-		.aggregate([{$project: {_id: 1, name: 1, count: {"$size": "$recordings"}}}])
-		.skip(start)
-		.limit(perPage)
-		.exec(function(err, tags) {
-			TagDetails.countDocuments().exec(function(err, count) {
-				if (err) return next(err);
-				let next = null;
-				if (count > start+perPage) {
-					next = start+perPage;
-				}
-				res.json({
-					tags: tags,
-					start: start,
-					next: next,
-					max_pg: Math.floor(count/perPage),
-					pg_size: perPage,
-					max: count
-				})
-			})
-		})
-});
-
-app.get('/api/v1/tag/:id/details', function(req, res, next) {
-	let id = mongoose.Types.ObjectId(req.params.id);
-	console.log(id);
-
-	TagDetails
-		.aggregate([
-			{ "$match": {'_id':id}},
-			{ "$unwind": "$recordings" },
-			{
-				"$lookup":
-				{
-					from: "recordings",
-					localField: "recordings",
-					foreignField: "_id",
-					as: "recordings"
-				}
-			},
-			{ "$unwind": "$recordings" },
-			{ "$project": { "_id": 1, "name": 1, "recordings": {"_id": 1, "datetime": 1, "duration": 1, "tags": 1, "human_id": 1}, "analysis": 1 }},
-			{ "$group": {
-				"_id": "$_id",
-				"name": { "$first": "$name"},
-				"analysis": { "$first": "$analysis"},
-				"recordings": { "$push": "$recordings" },
-			}}
-		])
-		.exec(function(err, bd) {
-			if (err) {
-				console.log(err);
-				return next(err);
-			}
-			//console.log(bd);
-			if (bd.length > 0) {
-				res.json(bd[0]);
-			} else {
-				res.status(404).json({});
-			}
-		})
-});
-
-
-const GroupDetails = require("./schema/group_details")
-app.get('/api/v1/groups/:start', function(req, res, next) {
-	let perPage = 20;
-	let start = parseInt(req.params.start,0);
-
-	GroupDetails
-		.aggregate([{$project: {_id: 1, name: 1, description: 1, count: {"$size": "$recordings"}}}])
-		.skip(start)
-		.limit(perPage)
-		.exec(function(err, groups) {
-			GroupDetails.countDocuments().exec(function(err, count) {
-				if (err) return next(err);
-				let next = null;
-				if (count > start+perPage) {
-					next = start+perPage;
-				}
-				res.json({
-					groups: groups,
-					start: start,
-					next: next,
-					max_pg: Math.floor(count/perPage),
-					pg_size: perPage,
-					max: count
-				})
-			})
-		})
-});
-
-app.get('/api/v1/group/:id/details', function(req, res, next) {
-	let id = mongoose.Types.ObjectId(req.params.id);
-	console.log(id);
-
-	GroupDetails
-		.aggregate([
-			{ "$match": {'_id':id}},
-			{ "$unwind": "$recordings" },
-			{
-				"$lookup":
-				{
-					from: "recordings",
-					localField: "recordings",
-					foreignField: "_id",
-					as: "recordings"
-				}
-			},
-			{ "$unwind": "$recordings" },
-			{ "$project": { "_id": 1, "name": 1, "description": 1, "recordings": {"_id": 1, "datetime": 1, "duration": 1, "tags": 1, "human_id": 1}, "analysis": 1 }},
-			{ "$group": {
-				"_id": "$_id",
-				"name": { "$first": "$name"},
-				"description": { "$first": "$description"},
-				"analysis": { "$first": "$analysis"},
-				"recordings": { "$push": "$recordings" },
-			}}
-		])
-		.exec(function(err, bd) {
-			if (err) {
-				console.log(err);
-				return next(err);
-			}
-			//console.log(bd);
-			if (bd.length > 0) {
-				res.json(bd[0]);
-			} else {
-				res.status(404).json({});
-			}
-		})
-});
-
-*/
-
 
 
 /////////////////////////////////////////////////////////////
@@ -362,6 +64,13 @@ app.get('/api/v1/healthz', (req, res) => {
 		res.status(500).send('ERR');
 	}
 });
+
+/////////////////////////////////////////////////////////////
+// Version
+app.get('/api/v1/version', (req, res) => {
+		res.status(200).send(version);
+});
+
 
 /////////////////////////////////////////////////////////////
 // catch 404 and forward to error handler

@@ -4,8 +4,8 @@ const mdb = require('./mongo').mdb;
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const RecordingAnalysis = new Schema({
-	rec_id: { type: Schema.ObjectId, required: true, index: true },
+const ExperimentAnalysis = new Schema({
+	exp_name: { type: String, required: true, index: true },
 	commit: { type: String, required: true },
 	data: { type: {
 		title: { type: String, required: true },
@@ -17,5 +17,5 @@ const RecordingAnalysis = new Schema({
 	}, required: true },
 },);
 
-var RecordingAnalysisModel = mdb.model('recording_analysis', RecordingAnalysis, 'recording_analysis');
-module.exports = RecordingAnalysisModel
+var ExperimentAnalysisModel = mdb.model('experiment_analysis', ExperimentAnalysis, 'experiment_analysis');
+module.exports = ExperimentAnalysisModel

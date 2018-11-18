@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Visualization = new Schema({
-	exp_id: { type: Schema.ObjectId, required: true, index: true },
+	rec_id: { type: Schema.ObjectId, required: true, index: true },
 	data_type: { type: String, required: true, index: true },
 
 	summary: { type: Object, required: false },
@@ -14,5 +14,5 @@ const Visualization = new Schema({
 });
 Visualization.index({ exp_id: 1, data_type: 1 });
 
-const VisualizationModel = mdb.model('recording_data_visualization', Visualization, 'recording_data_visualization');
+const VisualizationModel = mdb.model('recording_data_visualizations', Visualization, 'recording_data_visualizations');
 module.exports = VisualizationModel

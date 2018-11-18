@@ -13,7 +13,6 @@ const Recording = new Schema({
 
 	summary: {type: Object, required: false },
 
-	description: {type: String, required: false },
 	experiment: {type: String, required: false },
 	tags: {type: [String], required: false },
 

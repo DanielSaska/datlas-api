@@ -5,21 +5,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Group = new Schema({
-	name: {type: [String], required: true, index: { unique: true } },
+	name: {type: String, required: true, index: { unique: true } },
+	description: { type: String, required: false },
+	commit: { type: String, required: true },
 	recordings: {type: [Schema.ObjectId], required: false},
-
-	analysis: { type: {
-		addons: { type: [{
-			title: { type: String, required: true },
-			subtitle: { type: String, required: true },
-			description: { type: String, required: true },
-			data: { type: Object, required: false },
-			plot: { type: Object, required: false },
-			priority: { type: Number, required: true },
-			html: { type: String, required: true }
-		}], required: true },
-	}, required: false }
-
+	analysis: {type: [Schema.ObjectId], required: false},
 });
 
 var GroupModel = mdb.model('groups', Group);

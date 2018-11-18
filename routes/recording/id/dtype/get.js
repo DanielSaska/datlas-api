@@ -9,7 +9,7 @@ const route = function(req, res, next) {
 	let dtype = req.params.dtype;
 
 	DataType
-		.findOne({exp_id: id, data_type: dtype})
+		.findOne({rec_id: id, data_type: dtype})
 		.exec(function(err, rd) {
 			console.log(rd);
 			if (err) return next(err);

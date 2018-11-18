@@ -24,7 +24,7 @@ const route = function(req, res, next) {
 					next: next,
 					max_pg: Math.floor(count/perPage),
 					pg_size: perPage,
-					max: count
+					n_entries: count
 				})
 			})
 		})

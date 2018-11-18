@@ -2,7 +2,6 @@
 const express = require('express');
 
 const router = express.Router();
-
-router.get('/:start', require('./start.get'));
+router.get('/:id', require('./id.get'));
 
 module.exports = router;
