@@ -39,7 +39,7 @@ const route = function(req, res, next) {
 							"_id": 1, 
 							"human_id": 1, 
 							"commit": 1, 
-							"summmary": 1,
+							"summary": 1,
 							"experiment": 1,
 							"data_types": 1,
 							"tags": 1
