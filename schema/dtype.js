@@ -14,6 +14,10 @@ const DataType = new Schema({
 	summary: { type: Object, required: false },
 
 	visualizations: { type: [Schema.ObjectId], required: false },
+	meta: { type: [{
+		name: String,
+		value: String
+	}], required: false },
 
 	//Errors
 	err: {type: [String], required: false },
