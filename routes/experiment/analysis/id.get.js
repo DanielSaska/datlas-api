@@ -9,8 +9,6 @@ const route = function(req, res, next) {
 	ExperimentAnalysis
 		.findOne({_id: id})
 		.exec(function(err, ea) {
-			console.log(err);
-			console.log(ea);
 			if (err) {
 				//console.error(err);
 				return next(err);

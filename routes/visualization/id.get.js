@@ -9,8 +9,6 @@ const route = function(req, res, next) {
 	Visualization
 		.findOne({_id: id})
 		.exec(function(err, vis) {
-			console.log(err);
-			console.log(vis);
 			if (err) {
 				//console.error(err);
 				return next(err);

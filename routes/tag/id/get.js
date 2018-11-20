@@ -4,7 +4,6 @@ const mdb = require('../../../schema/mongo').mdb;
 const Tag = require("../../../schema/tag")
 
 const route = function(req, res, next) {
-	//console.log(req.params);
 	let id = mongoose.Types.ObjectId(req.params.id);
 
 	Tag

@@ -9,8 +9,6 @@ const route = function(req, res, next) {
 	TagAnalysis
 		.findOne({_id: id})
 		.exec(function(err, ta) {
-			console.log(err);
-			console.log(ta);
 			if (err) {
 				//console.error(err);
 				return next(err);

@@ -9,8 +9,6 @@ const route = function(req, res, next) {
 	RecordingAnalysis
 		.findOne({_id: id})
 		.exec(function(err, ra) {
-			console.log(err);
-			console.log(ra);
 			if (err) {
 				//console.error(err);
 				return next(err);

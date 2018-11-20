@@ -27,8 +27,8 @@ mdb.connection.on('connected', function(){
 const mdb_start = function() {
 	return mdb.connect(cfg.mongo, mongo_options).catch(function(err) {
 		if (err) {
-			console.log('Failed to connect to MongoDB');
-			console.log(err);
+			console.error('Failed to connect to MongoDB');
+			console.error(err);
 			setTimeout(mdb_start, 1000);
 		}
 	});

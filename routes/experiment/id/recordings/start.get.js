@@ -5,7 +5,6 @@ const Experiment = require("../../../../schema/experiment")
 const Recording = require("../../../../schema/recording")
 
 const route = function(req, res, next) {
-	console.log(req.params);
 	let id = mongoose.Types.ObjectId(req.params.id);
 	let perPage = 20;
 	let start = parseInt(req.params.start,0);
@@ -23,8 +22,6 @@ const route = function(req, res, next) {
 				let min = (start < exp.recordings.length) ? start : exp.recordings.length;
 				let max = min+perPage;
 				max = (max < exp.recordings.length) ? max : exp.recordings.length;
-				console.log(min);
-				console.log(max);
 				let recordings = exp.recordings.slice(min,max);
 
 				let next = null;

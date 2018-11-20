@@ -9,8 +9,6 @@ const route = function(req, res, next) {
 	GroupAnalysis
 		.findOne({_id: id})
 		.exec(function(err, ga) {
-			console.log(err);
-			console.log(ga);
 			if (err) {
 				//console.error(err);
 				return next(err);
