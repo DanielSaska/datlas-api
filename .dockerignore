@@ -3,3 +3,5 @@ npm-debug.log
 docker-compose.yml
 Dockerfile
 data
+config.json
+mongo_setup.js
