@@ -24,4 +24,4 @@ services:
          - ./mongo_setup.js:/docker-entrypoint-initdb.d/mongo_setup.js
        ports:
            - 27017:27017
-       command: mongod --smallfiles # --logpath=/dev/null # --quiet
+       command: mongod #--smallfiles # --logpath=/dev/null # --quiet
