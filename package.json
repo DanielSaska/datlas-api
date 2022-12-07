@@ -14,9 +14,9 @@
   "license": "",
   "homepage": "https://github.com/DanielSaska/datlas-api",
   "dependencies": {
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "cookie-parser": "^1.4.3",
-    "express": "^4.16.3",
+    "express": "^4.18.2",
     "helmet": "^3.13.0",
     "mongoose": "^5.2.6"
   }
